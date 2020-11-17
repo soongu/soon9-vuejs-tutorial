@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <p>
+        {{ items[0].name }}: {{ items[0].price }} x {{ items[0].quantity }} = {{ items[0].price * items[0].quantity }}
+    </p>
+    <p>
+        필터 예제 {{ 1000000000 | numberWithDelimiter }}
+    </p>
+</div>
+<script src="https://unpkg.com/vue@2.5.17"></script>
+<script>
+    var items = [
+        {
+            name: '연필',
+            price: 300,
+            quantity: 0
+        },
+        {
+            name: '공책',
+            price: 400,
+            quantity: 0
+        },
+        {
+            name: '지우개',
+            price: 500,
+            quantity: 0
+        }
+    ];
+
+    var vm = new Vue({
+        el: '#app',
+        data: { //UI에 표시되는 상태데이터
+            items: items
+        },
+        filters: {
+            numberWithDelimiter: function (value) {
+                if (!value) {
+                    return '0';
+                }
+                return value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+            }
+        }
+    })
+    console.log(vm);
+    console.log(vm.$el);
+    console.log(vm._data.items);
+    console.log(vm.items);
+
+    //첫번째 콜백: 모니터링 대상 값
+    //두번째 콜백: 모니터링 대상 값 변경시 실행할 내용
+    vm.$watch(function () {
+        return this.items[0].quantity;
+    }, function (quantity) {
+        console.log("연필 개수:", quantity)
+    });
+
+</script>
+</body>
+</html>

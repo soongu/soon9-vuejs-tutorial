@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <p>{{ count }}</p>
+</div>
+<script src="https://unpkg.com/vue@2.5.17"></script>
+<script>
+    var vm = new Vue({
+        el: '#app',
+        data: function () { //UI에 표시되는 상태데이터
+            return {
+                count: 0,
+                timerId: null
+            }
+        },
+        created: function () { //인스턴스가 생성되고 데이터가 초기화된 시점. 아직 DOM이 연결된 상태는 아님
+            console.log('created');
+            var that = this;
+            //데이터 참조 가능
+            console.log(this.count);
+            //DOM이 아직 연결 안되었다는 증거
+            console.log(this.$el);
+            //타이머 시작
+            this.timerId = setInterval(function () {
+                that.count++;
+            }, 1000);
+        },
+        mounted: function () { //인스턴스와 DOM이 연결된 시점, DOM조작이나 이벤트 리스너 등록시 사용하는 훅
+            console.log('mounted');
+            //DOM이 연결되었다는 증거
+            console.log(this.$el);
+        },
+        beforeDestroy: function () { //인스턴스가 폐기되기 직전에 실행, 메모리 뒷정리 용도
+            console.log('beforeDestroy');
+            //타이머 정리, 콘솔창에서 vm.$destroy() 입력해볼것
+            clearInterval(this.timerId);
+        }
+    })
+
+</script>
+</body>
+</html>

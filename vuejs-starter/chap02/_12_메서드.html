@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div id="app">
+    <ul>
+        <li v-for="item in items" :key="item.name">
+            <!-- v-on대신 v-model을 사용 -->
+            {{ item.name }}의 개수: <input type="number" v-model="item.quantity" min="0">
+        </li>
+    </ul>
+    <div v-bind:style="errorMessageStyle">
+        <!--  각 상품의 단가와 구매 개수를 리스트로 나타냄 -->
+        <ul>
+            <li v-for="item in items" :key="item.name">
+                {{ item.name }}: {{ item.price }} x {{ item.quantity }}
+                = {{ item.price * item.quantity | numberWithDelimiter }}원
+            </li>
+        </ul>
+        <p>
+            {{ items[0].name }}: {{ items[0].price }} x {{ items[0].quantity }} = {{ items[0].price * items[0].quantity
+            }}
+        </p>
+        <p>
+            소계: {{ totalPrice | numberWithDelimiter }}원
+        </p>
+        <p>
+            합계(세금포함): {{ totalPriceWithTax | numberWithDelimiter }}원
+        </p>
+        <!-- 속성 값에 따라 화면 표시 여부가 결정 -->
+        <p v-show="!canBuy">
+            {{ 1000 | numberWithDelimiter }}원 이상부터 구매 가능
+        </p>
+        <!--  버튼을 클릭하면 메서드가 호출 -->
+        <button v-bind:disabled="!canBuy" v-on:click="doBuy">구매</button>
+    </div>
+</div>
+<script src="https://unpkg.com/vue@2.5.17"></script>
+<script>
+    var items = [
+        {
+            name: '연필',
+            price: 300,
+            quantity: 0
+        },
+        {
+            name: '공책',
+            price: 400,
+            quantity: 0
+        },
+        {
+            name: '지우개',
+            price: 500,
+            quantity: 0
+        }
+    ];
+
+    var vm = new Vue({
+        el: '#app',
+        data: { //UI에 표시되는 상태데이터
+            items: items
+        },
+        filters: {
+            numberWithDelimiter: function (value) {
+                if (!value) {
+                    return '0';
+                }
+                return value.toString().replace(/(\d)(?=(\d{3})+$)/g, '$1,')
+            }
+        },
+        methods: {
+            doBuy: function () {
+                //실제라면 서버와 통신하는 시점
+                alert(this.totalPriceWithTax + '원 판매됨!');
+                this.items.forEach(function (item) {
+                    item.quantity = 0;
+                });
+            }
+        },
+        computed: { //계산 프로퍼티
+            totalPrice: function () {
+                return this.items.reduce(function (sum, item) {
+                    return sum + (item.price * item.quantity)
+                }, 0);
+            },
+            totalPriceWithTax: function () {
+                //계산 프로퍼티에 의존하는 계산 프로퍼티도 정의 가능
+                return Math.floor(this.totalPrice * 1.1);
+            },
+            canBuy: function () {
+                return this.totalPrice >= 1000;
+            },
+            errorMessageStyle: function () {
+                //canBuy가 거짓이면 붉게 표시
+                return {
+                    border: this.canBuy ? '' : '1px solid red',
+                    color: this.canBuy ? '' : 'red'
+                }
+            }
+        }
+    })
+
+</script>
+</body>
+</html>
