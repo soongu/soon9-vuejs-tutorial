@@ -13,3 +13,6 @@
 
 ### Chapter 02. Vue.js의 기본 사용법
 - [자세히 보기](vuejs-starter/chap02/chap02_summary.md)
+
+### Chapter 03. 컴포넌트의 기초
+- [자세히 보기](vuejs-starter/chap03/chap03_summary.md)

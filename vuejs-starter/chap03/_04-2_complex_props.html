@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="fruits-component">
+    <ol>
+        <fruits-item-name v-for="fruit in fruits" v-bind:fruits-item="fruit" v-bind:key="fruit.name"></fruits-item-name>
+    </ol>
+</div>
+
+<script src="https://unpkg.com/vue@2.5.17"></script>
+
+<script>
+    Vue.component('fruits-item-name', {
+        props: {
+            fruitsItem: { //템플릿 안에서는 케밥케이스 사용
+                type: Object,
+                required: true
+            }
+        },
+        template: '<li>{{fruitsItem.name}}</li>'
+    });
+
+    //부모 컴포넌트
+    new Vue({
+        el: '#fruits-component',
+        data: {
+            fruits: [
+                {name: '딸기'},
+                {name: '사과'},
+            ]
+        }
+    });
+</script>
+</body>
+</html>
